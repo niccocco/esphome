@@ -86,7 +86,14 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
   if (this->model_ == DHT_MODEL_DHT11) {
     delayMicroseconds(18000);
   } else if (this->model_ == DHT_MODEL_SI7021) {
+#ifdef USE_ESP8266
     delayMicroseconds(500);
+    this->pin_->digital_write(true);
+    delayMicroseconds(40);
+#else
+    delayMicroseconds(400);
+    this->pin_->digital_write(true);
+#endif
     this->pin_->digital_write(true);
     delayMicroseconds(40);
   } else if (this->model_ == DHT_MODEL_DHT22_TYPE2) {
